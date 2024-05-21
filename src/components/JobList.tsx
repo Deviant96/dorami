@@ -1,91 +1,69 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JobCard from './JobCard';
-
-interface Job {
-  id: number;
-  companyName: string;
-  isForeign: boolean;
-  details: string;
-  date: string;
-  notes: string;
-  status: 'pass' | 'do not pass' | 'gone' | 'cancel';
-  progress: string[];
-}
+import JobForm from './JobForm';
+import InterviewProgressNav from './InterviewProgressNav';
+import { Job } from '@/app/types/Job';
 
 const JobList: React.FC = () => {
-  const [jobs, setJobs] = useState<Job[]>([
-    // Initial sample job data
-    {
-      id: 1,
-      companyName: 'Company A',
-      isForeign: false,
-      details: 'Details about Company A',
-      date: '2024-05-21',
-      notes: 'Initial interview',
-      status: 'pass',
-      progress: [],
-    },
-  ]);
+  const [jobs, setJobs] = useState<Job[]>(() => {
+    const savedJobs = localStorage.getItem('jobs');
+    return savedJobs ? JSON.parse(savedJobs) : [];
+  });
 
-  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, jobId: number) => {
-    event.dataTransfer.setData('text/plain', jobId.toString());
+  const [editingJob, setEditingJob] = useState<Job | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+  }, [jobs]);
+
+  const handleSaveJob = (job: Job) => {
+    setJobs((prevJobs) => {
+      const jobExists = prevJobs.find((j) => j.id === job.id);
+      if (jobExists) {
+        return prevJobs.map((j) => (j.id === job.id ? job : j));
+      } else {
+        return [...prevJobs, job];
+      }
+    });
+    setEditingJob(null);
   };
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>, progressStage: string) => {
-    const jobId = parseInt(event.dataTransfer.getData('text/plain'), 10);
+  const handleEditJob = (id: number) => {
+    const jobToEdit = jobs.find((job) => job.id === id);
+    setEditingJob(jobToEdit || null);
+  };
+
+  const handleDeleteJob = (id: number) => {
+    setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
+  };
+
+  const handleDropProgress = (event: React.DragEvent<HTMLDivElement>, jobId: number) => {
+    const stage = event.dataTransfer.getData('stage');
     setJobs((prevJobs) =>
       prevJobs.map((job) =>
-        job.id === jobId ? { ...job, progress: [...job.progress, progressStage] } : job
+        job.id === jobId ? { ...job, progress: [...new Set([...job.progress, stage])] } : job
       )
     );
   };
 
-  const stages = ['Screening', 'Assessment Test', 'Interview with HR', 'Final Interview'];
-
   return (
-    <div className="flex space-x-4">
-      <div className="w-1/3">
+    <div className="container mx-auto p-4">
+      <button onClick={() => setEditingJob({} as Job)} className="mb-4 text-blue-500">Add Job</button>
+      {editingJob && <JobForm onSave={handleSaveJob} onCancel={() => setEditingJob(null)} existingJob={editingJob} />}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {jobs.map((job) => (
           <JobCard
             key={job.id}
-            companyName={job.companyName}
-            isForeign={job.isForeign}
-            details={job.details}
-            date={job.date}
-            notes={job.notes}
-            status={job.status}
-            onDragStart={(event) => handleDragStart(event, job.id)}
+            job={job}
+            onEdit={handleEditJob}
+            onDelete={handleDeleteJob}
+            onDrop={handleDropProgress}
           />
         ))}
       </div>
-      <div className="w-2/3 flex space-x-4">
-        {stages.map((stage) => (
-          <div
-            key={stage}
-            className="w-full p-4 border rounded shadow-md bg-gray-100"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(event) => handleDrop(event, stage)}
-          >
-            <h3 className="text-xl font-bold mb-4">{stage}</h3>
-            {jobs
-              .filter((job) => job.progress.includes(stage))
-              .map((job) => (
-                <JobCard
-                  key={job.id}
-                  companyName={job.companyName}
-                  isForeign={job.isForeign}
-                  details={job.details}
-                  date={job.date}
-                  notes={job.notes}
-                  status={job.status}
-                  onDragStart={(event) => handleDragStart(event, job.id)}
-                />
-              ))}
-          </div>
-        ))}
-      </div>
+      <InterviewProgressNav />
     </div>
   );
 };
