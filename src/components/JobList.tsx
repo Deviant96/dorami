@@ -6,29 +6,44 @@ import JobForm from "./JobForm";
 import InterviewProgressNav from "./InterviewProgressNav";
 import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import { Job } from "@/types/Job";
+import prisma from "@/db/prisma";
 
 const JobList: React.FC = () => {
-  const [jobs, setJobs] = useState<Job[]>(() => {
-    const savedJobs = localStorage.getItem("jobs");
-    return savedJobs ? JSON.parse(savedJobs) : [];
-  });
-
+  const [jobs, setJobs] = useState<any[]>([]);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("jobs", JSON.stringify(jobs));
-  }, [jobs]);
+    const fetchJobs = async () => {
+      const jobs = await prisma.job.findMany({
+        include: {
+          progress: {
+            include: {
+              stage: true,
+            },
+          },
+        },
+      });
+      setJobs(jobs);
+    };
 
-  const handleSaveJob = (job: Job) => {
+    fetchJobs();
+  }, []);
+
+  const handleSaveJob = async (job: any) => {
+    const savedJob = await prisma.job.upsert({
+      where: { id: job.id || 0 },
+      update: job,
+      create: job,
+    });
+
     setJobs((prevJobs) => {
-      const jobExists = prevJobs.find((j) => j.id === job.id);
+      const jobExists = prevJobs.find((j) => j.id === savedJob.id);
       if (jobExists) {
-        return prevJobs.map((j) => (j.id === job.id ? job : j));
+        return prevJobs.map((j) => (j.id === savedJob.id ? savedJob : j));
       } else {
-        return [...prevJobs, job];
+        return [...prevJobs, savedJob];
       }
     });
-    setEditingJob(null);
   };
 
   const handleEditJob = (id: number) => {
@@ -36,7 +51,8 @@ const JobList: React.FC = () => {
     setEditingJob(jobToEdit || null);
   };
 
-  const handleDeleteJob = (id: number) => {
+  const handleDeleteJob = async (id: number) => {
+    await prisma.job.delete({ where: { id } });
     setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
   };
 
@@ -53,12 +69,6 @@ const JobList: React.FC = () => {
       )
     );
   };
-
-  const handleDragJobCard = (
-    event: React.DragEvent<HTMLDivElement>,
-  ) : void => {
-    
-  }
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;

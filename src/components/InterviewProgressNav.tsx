@@ -1,12 +1,19 @@
 "use client";
 
-import { useState } from 'react';
+import prisma from '@/db/prisma';
+import { useEffect, useState } from 'react';
 
 const InterviewProgressNav: React.FC = () => {
-  const [stages, setStages] = useState<string[]>(() => {
-    const savedStages = localStorage.getItem('stages');
-    return savedStages ? JSON.parse(savedStages).map((stage: { id: number, name: string }) => stage.name) : [];
-  });
+  const [stages, setStages] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchStages = async () => {
+      const stages = await prisma.stage.findMany();
+      setStages(stages.map(stage => stage.name));
+    };
+
+    fetchStages();
+  }, []);
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, stage: string) => {
     event.dataTransfer.setData('stage', stage);

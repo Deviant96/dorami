@@ -1,0 +1,43 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Job {
+  id         Int       @id @default(autoincrement())
+  companyName String
+  isForeign   Boolean
+  details     String
+  date        DateTime
+  notes       String?
+  status      Status
+  progress    JobProgress[]
+}
+
+model JobProgress {
+  id      Int      @id @default(autoincrement())
+  jobId   Int
+  job     Job      @relation(fields: [jobId], references: [id])
+  stage   Stage    @relation(fields: [stageId], references: [id])
+  stageId Int
+}
+
+model Stage {
+  id      Int       @id @default(autoincrement())
+  name    String
+  jobs    JobProgress[]
+}
+
+enum Status {
+  PASS
+  DO_NOT_PASS
+  GONE
+  CANCEL
+}
