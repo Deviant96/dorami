@@ -1,5 +1,7 @@
-import { Job } from '@/app/types/Job';
-import React, { useState, useEffect } from 'react';
+"use client";
+
+import { Job } from '@/types/Job';
+import { useState } from 'react';
 
 interface JobFormProps {
   onSave: (job: Job) => void;

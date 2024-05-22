@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+"use client";
+
+import { useState } from 'react';
 
 const InterviewProgressNav: React.FC = () => {
   const [stages, setStages] = useState<string[]>(() => {
@@ -11,7 +13,7 @@ const InterviewProgressNav: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-300 flex justify-around">
+    <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-300 flex justify-around z-[9999]">
       {stages.map((stage) => (
         <div
           key={stage}

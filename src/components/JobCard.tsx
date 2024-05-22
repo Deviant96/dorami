@@ -1,5 +1,4 @@
-import { Job } from "@/app/types/Job";
-import React from "react";
+import { Job } from "@/types/Job";
 import { BiWorld } from "react-icons/bi";
 import { MdDelete, MdEdit } from "react-icons/md";
 
@@ -13,7 +12,6 @@ interface JobCardProps {
 
 const JobStatusStyled  = (jobStatus: string) : string => {
   let jobStyled;
-  console.log(jobStatus)
   switch(jobStatus) {
     case "pass": jobStyled = "text-[#2a9d8f]"; break;
     case "on-going": jobStyled = "text-[#00b4d8]"; break;
@@ -27,7 +25,7 @@ const JobStatusStyled  = (jobStatus: string) : string => {
 const JobCard: React.FC<JobCardProps> = ({ job, onEdit, onDelete, onDrop, onDrag }) => {
   return (
     <div
-      className={`p-4 rounded shadow-md bg-white mb-4 relative `}
+      className={`p-4 rounded shadow-md bg-white mb-4 relative ${onDrag ? "border-2 border-blue-500" : ""}`}
       onDragOver={(e) => e.preventDefault()}
       onDrop={(event) => onDrop(event, job.id)}
     >
@@ -43,8 +41,8 @@ const JobCard: React.FC<JobCardProps> = ({ job, onEdit, onDelete, onDrop, onDrag
         >
           {`(${job.status})`}
         </span>
-        •
-        <span className="text-sm text-gray-500">{job.date}</span>
+        {job.date ? "•" : ""}
+        <span className="text-xs text-gray-500">{job.date}</span>
       </div>
       
       <p className="text-sm text-gray-600">{job.details}</p>

@@ -5,7 +5,7 @@ import JobCard from "./JobCard";
 import JobForm from "./JobForm";
 import InterviewProgressNav from "./InterviewProgressNav";
 import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
-import { Job } from "@/app/types/Job";
+import { Job } from "@/types/Job";
 
 const JobList: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>(() => {

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MdDelete, MdEdit } from "react-icons/md";
 
@@ -59,7 +61,7 @@ const StageList: React.FC = () => {
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Manage Stages</h2>
-      <div className="flex mb-4">
+      <div className="flex">
         <input
           type="text"
           value={editingStage ? editingStage.name : newStageName}
@@ -78,8 +80,8 @@ const StageList: React.FC = () => {
           {editingStage ? "Save" : "Add"}
         </button>
       </div>
-      <div>
-        <small>
+      <div className="mb-4">
+        <small className="text-gray-500 italic">
           Example 'Screening', 'Assessment Test', 'Interview with HR', 'Final
           Interview'
         </small>
@@ -88,7 +90,7 @@ const StageList: React.FC = () => {
         <Droppable droppableId="stages">
           {(provided) => (
             <ul
-              className="list-disc pl-5"
+              className="list-disc"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
