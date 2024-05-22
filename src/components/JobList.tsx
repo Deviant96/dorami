@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import JobCard from "./JobCard";
 import JobForm from "./JobForm";
 import InterviewProgressNav from "./InterviewProgressNav";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import { Job } from "@/app/types/Job";
 
 const JobList: React.FC = () => {
@@ -54,6 +54,12 @@ const JobList: React.FC = () => {
     );
   };
 
+  const handleDragJobCard = (
+    event: React.DragEvent<HTMLDivElement>,
+  ) : void => {
+    
+  }
+
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
 
@@ -83,7 +89,7 @@ const JobList: React.FC = () => {
         <Droppable droppableId="jobs">
           {(provided) => (
             <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              className="grid grid-cols-1 gap-4"
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
@@ -93,7 +99,7 @@ const JobList: React.FC = () => {
                   draggableId={job.id.toString()}
                   index={index}
                 >
-                  {(provided) => (
+                  {(provided: DraggableProvided, draggableSnapshot: DraggableStateSnapshot) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
@@ -105,6 +111,7 @@ const JobList: React.FC = () => {
                         onEdit={handleEditJob}
                         onDelete={handleDeleteJob}
                         onDrop={handleDropProgress}
+                        onDrag={draggableSnapshot.isDragging}
                       />
                     </div>
                   )}

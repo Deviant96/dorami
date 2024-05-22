@@ -1,4 +1,3 @@
-// src/components/JobForm.tsx
 import { Job } from '@/app/types/Job';
 import React, { useState, useEffect } from 'react';
 
@@ -93,6 +92,7 @@ const JobForm: React.FC<JobFormProps> = ({ onSave, onCancel, existingJob }) => {
         >
           <option value="pass">Pass</option>
           <option value="do not pass">Do Not Pass</option>
+          <option value="on-going">On-Going</option>
           <option value="gone">Gone</option>
           <option value="cancel">Cancel</option>
         </select>

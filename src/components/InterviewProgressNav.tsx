@@ -1,5 +1,4 @@
-// src/components/InterviewProgressNav.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const InterviewProgressNav: React.FC = () => {
   const [stages, setStages] = useState<string[]>(() => {
@@ -12,15 +11,15 @@ const InterviewProgressNav: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-gray-800 text-white flex justify-around">
+    <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-300 flex justify-around">
       {stages.map((stage) => (
         <div
           key={stage}
-          className="p-2 bg-blue-600 rounded cursor-pointer"
+          className="p-2 rounded cursor-pointer"
           draggable
           onDragStart={(event) => handleDragStart(event, stage)}
         >
-          {stage}
+          <span className="text-xs border border-gray-400 rounded-xl py-1 px-2">{stage}</span>
         </div>
       ))}
     </div>
