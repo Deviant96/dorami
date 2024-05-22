@@ -82,8 +82,8 @@ const StageList: React.FC = () => {
       </div>
       <div className="mb-4">
         <small className="text-gray-500 italic">
-          Example 'Screening', 'Assessment Test', 'Interview with HR', 'Final
-          Interview'
+          example: Screening, Assessment Test, Interview with HR, Final
+          Interview
         </small>
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
