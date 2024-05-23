@@ -5,8 +5,9 @@ import JobCard from "./JobCard";
 import JobForm from "./JobForm";
 import InterviewProgressNav from "./InterviewProgressNav";
 import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
-import { Job } from "@/types/Job";
 import prisma from "@/db/prisma";
+import { Job } from "@/types/Job";
+import { getAllJobs } from "@/data/getAllJobs";
 
 const JobList: React.FC = () => {
   const [jobs, setJobs] = useState<any[]>([]);
@@ -14,21 +15,12 @@ const JobList: React.FC = () => {
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const jobs = await prisma.job.findMany({
-        include: {
-          progress: {
-            include: {
-              stage: true,
-            },
-          },
-        },
-        orderBy: { order: 'asc' }
-      });
+      await getAllJobs();
       setJobs(jobs);
     };
 
     fetchJobs();
-  }, []);
+  }, [jobs]);
 
   const handleSaveJob = async (job: any) => {
     const savedJob = job.id
@@ -153,7 +145,7 @@ const JobList: React.FC = () => {
           )}
         </Droppable>
       </DragDropContext>
-      <InterviewProgressNav />
+      {/* <InterviewProgressNav /> */}
     </div>
   );
 };
