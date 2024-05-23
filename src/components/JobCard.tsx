@@ -1,9 +1,9 @@
-import { Job } from "@/types/Job";
+import { JobWithProgress } from "@/types/JobWithProgress";
 import { BiWorld } from "react-icons/bi";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 interface JobCardProps {
-  job: Job;
+  job: JobWithProgress;
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
   onDrop: (event: React.DragEvent<HTMLDivElement>, jobId: number) => void;

@@ -1,11 +1,10 @@
 'use server';
 
 import prisma from "@/db/prisma";
+import { JobWithProgress } from "@/types/JobWithProgress";
 
 export const getAllJobs = async () => {
-  "use server";
-
-  const jobs = await prisma.job.findMany({
+  const jobs: JobWithProgress[] = await prisma.job.findMany({
     include: {
       progress: {
         include: {

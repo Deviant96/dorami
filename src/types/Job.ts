@@ -6,6 +6,6 @@ export interface Job {
   date: string;
   notes: string;
   status: 'pass' | 'do not pass' | 'gone' | 'cancel';
-  progress: { stage: { name: string } }[];
+  // progress: { stage: { name: string } }[];
   order: number;
 }

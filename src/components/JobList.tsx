@@ -1,28 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import JobCard from "./JobCard";
 import JobForm from "./JobForm";
-import InterviewProgressNav from "./InterviewProgressNav";
 import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import prisma from "@/db/prisma";
-import { Job } from "@/types/Job";
-import { getAllJobs } from "@/data/getAllJobs";
+import { Job } from "@prisma/client";
+import { JobWithProgress } from "@/types/JobWithProgress";
 
-const JobList: React.FC = () => {
-  const [jobs, setJobs] = useState<any[]>([]);
-  const [editingJob, setEditingJob] = useState<Job | null>(null);
+
+const JobList = (props: { jobs: JobWithProgress[] }) => {
+  const [jobs, setJobs] = useState<JobWithProgress[]>(props.jobs);
+  const [editingJob, setEditingJob] = useState<JobWithProgress | null>(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
-      await getAllJobs();
-      setJobs(jobs);
+      setJobs(props.jobs);
     };
 
     fetchJobs();
-  }, [jobs]);
+  }, []);
 
-  const handleSaveJob = async (job: any) => {
+  const handleSaveJob = async (job: Job) => {
     const savedJob = job.id
       ? await prisma.job.update({
           where: { id: job.id },
@@ -35,9 +34,9 @@ const JobList: React.FC = () => {
     setJobs(prevJobs => {
       const jobExists = prevJobs.find(j => j.id === savedJob.id);
       if (jobExists) {
-        return prevJobs.map(j => (j.id === savedJob.id ? savedJob : j));
+        return prevJobs.map(j => (j.id === savedJob.id ? { ...j, ...savedJob } : j));
       } else {
-        return [...prevJobs, savedJob];
+        return [...prevJobs, { ...savedJob, progress: [] }];
       }
     });
     setEditingJob(null);
@@ -68,14 +67,13 @@ const JobList: React.FC = () => {
       setJobs(prevJobs =>
         prevJobs.map(job =>
           job.id === jobId
-            ? { ...job, progress: [...job.progress, { stage }] }
+            ? { ...job, progress: [...job.progress, { stage, jobId, stageId: stage.id, id: 0 }] }
             : job
         )
       );
     }
   };
   
-
   const handleDragEnd = async (result: any) => {
     if (!result.destination) return;
 
@@ -96,7 +94,7 @@ const JobList: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <button
-        onClick={() => setEditingJob({} as Job)}
+        onClick={() => setEditingJob({} as JobWithProgress)}
         className="mb-4 text-blue-500"
       >
         Add Job

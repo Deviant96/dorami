@@ -1,13 +1,13 @@
 "use client";
 
-import { Job } from '@/types/Job';
+import { JobWithProgress } from '@/types/JobWithProgress';
 import { useState } from 'react';
 
 interface JobFormProps {
-  job: Job;
-  onSave: (job: Job) => void;
+  job: JobWithProgress;
+  onSave: (job: JobWithProgress) => void;
   onCancel: () => void;
-  existingJob?: Job;
+  existingJob?: JobWithProgress;
 }
 
 const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
@@ -33,7 +33,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         <input
           type="text"
           name="companyName"
-          value={job.companyName}
+          value={formData.companyName}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />
@@ -43,7 +43,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         <input
           type="checkbox"
           name="isForeign"
-          checked={job.isForeign}
+          checked={formData.isForeign}
           onChange={handleChange}
           className="mt-1"
         />
@@ -52,7 +52,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         <label className="block text-gray-700">Details</label>
         <textarea
           name="details"
-          value={job.details}
+          value={formData.details}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />
@@ -62,7 +62,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         <input
           type="date"
           name="date"
-          value={job.date}
+          value={formData.date.toISOString().split('T')[0]}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />
@@ -71,7 +71,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         <label className="block text-gray-700">Notes</label>
         <textarea
           name="notes"
-          value={job.notes}
+          value={formData.notes || ''}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />
@@ -80,7 +80,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         <label className="block text-gray-700">Status</label>
         <select
           name="status"
-          value={job.status}
+          value={formData.status}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         >
