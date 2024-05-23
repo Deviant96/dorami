@@ -42,7 +42,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onEdit, onDelete, onDrop, onDrag
           {`(${job.status})`}
         </span>
         {job.date ? "•" : ""}
-        <span className="text-xs text-gray-500">{job.date}</span>
+        <span className="text-xs text-gray-500">{new Date(job.date).toLocaleDateString()}</span>
       </div>
       
       <p className="text-sm text-gray-600">{job.details}</p>
@@ -66,7 +66,7 @@ const JobCard: React.FC<JobCardProps> = ({ job, onEdit, onDelete, onDrop, onDrag
         <ul className="list-none">
           {job.progress.map((progress, index) => (
             <li key={index} className="text-sm text-gray-600 inline">
-              <span className="text-xs border rounded-xl py-1 px-2">{progress}</span>
+              <span className="text-xs border rounded-xl py-1 px-2">{progress.stage.name}</span>
               <span> {job.progress.length === index + 1 ? "" : "->"} </span>
             </li>
           ))}

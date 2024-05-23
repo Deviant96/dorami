@@ -4,28 +4,20 @@ import { Job } from '@/types/Job';
 import { useState } from 'react';
 
 interface JobFormProps {
+  job: Job;
   onSave: (job: Job) => void;
   onCancel: () => void;
   existingJob?: Job;
 }
 
-const JobForm: React.FC<JobFormProps> = ({ onSave, onCancel, existingJob }) => {
-  const [job, setJob] = useState<Job>({
-    id: existingJob?.id || Date.now(),
-    companyName: existingJob?.companyName || '',
-    isForeign: existingJob?.isForeign || false,
-    details: existingJob?.details || '',
-    date: existingJob?.date || '',
-    notes: existingJob?.notes || '',
-    status: existingJob?.status || 'pass',
-    progress: existingJob?.progress || []
-  });
+const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
+  const [formData, setFormData] = useState(job);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type, checked } = (e.target as HTMLInputElement);
-    setJob({
-      ...job,
-      [name]: type === 'checkbox' ? checked : value
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 

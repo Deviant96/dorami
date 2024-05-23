@@ -22,6 +22,7 @@ const JobList: React.FC = () => {
             },
           },
         },
+        orderBy: { order: 'asc' }
       });
       setJobs(jobs);
     };
@@ -30,20 +31,24 @@ const JobList: React.FC = () => {
   }, []);
 
   const handleSaveJob = async (job: any) => {
-    const savedJob = await prisma.job.upsert({
-      where: { id: job.id || 0 },
-      update: job,
-      create: job,
-    });
+    const savedJob = job.id
+      ? await prisma.job.update({
+          where: { id: job.id },
+          data: job,
+        })
+      : await prisma.job.create({
+          data: { ...job, order: jobs.length },
+        });
 
-    setJobs((prevJobs) => {
-      const jobExists = prevJobs.find((j) => j.id === savedJob.id);
+    setJobs(prevJobs => {
+      const jobExists = prevJobs.find(j => j.id === savedJob.id);
       if (jobExists) {
-        return prevJobs.map((j) => (j.id === savedJob.id ? savedJob : j));
+        return prevJobs.map(j => (j.id === savedJob.id ? savedJob : j));
       } else {
         return [...prevJobs, savedJob];
       }
     });
+    setEditingJob(null);
   };
 
   const handleEditJob = (id: number) => {
@@ -56,21 +61,30 @@ const JobList: React.FC = () => {
     setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
   };
 
-  const handleDropProgress = (
-    event: React.DragEvent<HTMLDivElement>,
-    jobId: number
-  ) => {
-    const stage = event.dataTransfer.getData("stage");
-    setJobs((prevJobs) =>
-      prevJobs.map((job) =>
-        job.id === jobId
-          ? { ...job, progress: [...new Set([...job.progress, stage])] }
-          : job
-      )
-    );
-  };
+  const handleDropProgress = async (event: React.DragEvent<HTMLDivElement>, jobId: number) => {
+    const stageName = event.dataTransfer.getData('stage');
+    const stage = await prisma.stage.findFirst({ where: { name: stageName } });
 
-  const handleDragEnd = (result: any) => {
+    if (stage) {
+      await prisma.jobProgress.create({
+        data: {
+          jobId,
+          stageId: stage.id,
+        },
+      });
+
+      setJobs(prevJobs =>
+        prevJobs.map(job =>
+          job.id === jobId
+            ? { ...job, progress: [...job.progress, { stage }] }
+            : job
+        )
+      );
+    }
+  };
+  
+
+  const handleDragEnd = async (result: any) => {
     if (!result.destination) return;
 
     const reorderedJobs = Array.from(jobs);
@@ -78,6 +92,13 @@ const JobList: React.FC = () => {
     reorderedJobs.splice(result.destination.index, 0, movedJob);
 
     setJobs(reorderedJobs);
+
+    for (let i = 0; i < reorderedJobs.length; i++) {
+      await prisma.job.update({
+        where: { id: reorderedJobs[i].id },
+        data: { order: i }
+      });
+    }
   };
 
   return (
@@ -90,9 +111,9 @@ const JobList: React.FC = () => {
       </button>
       {editingJob && (
         <JobForm
+          job={editingJob}
           onSave={handleSaveJob}
           onCancel={() => setEditingJob(null)}
-          existingJob={editingJob}
         />
       )}
       <DragDropContext onDragEnd={handleDragEnd}>

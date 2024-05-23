@@ -3,29 +3,37 @@
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MdDelete, MdEdit } from "react-icons/md";
+import prisma from "@/db/prisma";
 
 interface Stage {
   id: number;
+  order: number;
   name: string;
 }
 
 const StageList: React.FC = () => {
-  const [stages, setStages] = useState<Stage[]>(() => {
-    const savedStages = localStorage.getItem("stages");
-    return savedStages ? JSON.parse(savedStages) : [];
-  });
-
+  const [stages, setStages] = useState<Stage[]>([]);
   const [newStageName, setNewStageName] = useState("");
   const [editingStage, setEditingStage] = useState<Stage | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("stages", JSON.stringify(stages));
-  }, [stages]);
+    const fetchStages = async () => {
+      const stages = await prisma.stage.findMany({
+        orderBy: { order: 'asc' }
+      });
+      setStages(stages);
+    };
 
-  const handleAddStage = () => {
+    fetchStages();
+  }, []);
+
+  const handleAddStage = async () => {
     if (newStageName.trim()) {
-      setStages([...stages, { id: Date.now(), name: newStageName }]);
-      setNewStageName("");
+      const newStage = await prisma.stage.create({
+        data: { name: newStageName },
+      });
+      setStages([...stages, newStage]);
+      setNewStageName('');
     }
   };
 
@@ -33,22 +41,23 @@ const StageList: React.FC = () => {
     setEditingStage(stage);
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (editingStage && editingStage.name.trim()) {
-      setStages(
-        stages.map((stage) =>
-          stage.id === editingStage.id ? editingStage : stage
-        )
-      );
+      const updatedStage = await prisma.stage.update({
+        where: { id: editingStage.id },
+        data: { name: editingStage.name }
+      });
+      setStages(stages.map(stage => (stage.id === updatedStage.id ? updatedStage : stage)));
       setEditingStage(null);
     }
   };
 
-  const handleDeleteStage = (id: number) => {
-    setStages(stages.filter((stage) => stage.id !== id));
+  const handleDeleteStage = async (id: number) => {
+    await prisma.stage.delete({ where: { id } });
+    setStages(stages.filter(stage => stage.id !== id));
   };
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = async (result: any) => {
     if (!result.destination) return;
 
     const reorderedStages = Array.from(stages);
@@ -56,6 +65,13 @@ const StageList: React.FC = () => {
     reorderedStages.splice(result.destination.index, 0, movedStage);
 
     setStages(reorderedStages);
+
+    for (let i = 0; i < reorderedStages.length; i++) {
+      await prisma.stage.update({
+        where: { id: reorderedStages[i].id },
+        data: { order: i }
+      });
+    }
   };
 
   return (
