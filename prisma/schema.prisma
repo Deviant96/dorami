@@ -24,7 +24,7 @@ model JobProgress {
   id      Int      @id @default(autoincrement())
   jobId   Int
   job     Job      @relation(fields: [jobId], references: [id])
-  stage   String    @relation(fields: [stageId], references: [id])
+  stage   Stage    @relation(fields: [stageId], references: [id])
   stageId Int
 }
 
