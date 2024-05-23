@@ -15,7 +15,7 @@ model Job {
   details     String
   date        DateTime
   notes       String?
-  status      Status
+  status      String
   progress    JobProgress[]
   order       Int       @default(0)
 }
