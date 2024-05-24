@@ -35,3 +35,22 @@ export const deleteState = async (id: number) => {
     return error;
   }
 };
+
+export const updateState = async (id: number, name: string) => {
+  try {
+    const res = await fetch("/api/states/update", {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ id: id, name: name }),
+    });
+
+    const data = await res.json();
+
+    return data;
+  } catch (error: any) {
+    console.log(error);
+    return error;
+  }
+};

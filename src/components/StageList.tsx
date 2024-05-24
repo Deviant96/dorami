@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MdDelete, MdEdit } from "react-icons/md";
 import prisma from "@/db/prisma";
-import { createState, deleteState } from "@/datas/states";
+import { createState, deleteState, updateState } from "@/datas/states";
 
 interface Stage {
   id: number;
@@ -39,10 +39,11 @@ const StageList: React.FC = () => {
 
   const handleSaveEdit = async () => {
     if (editingStage && editingStage.name.trim()) {
-      const updatedStage = await prisma.stage.update({
-        where: { id: editingStage.id },
-        data: { name: editingStage.name }
-      });
+      const id = editingStage.id;
+      const name = editingStage.name;
+
+      const updatedStage = await updateState(id, name);
+      console.log(updatedStage.id)
       setStages(stages.map(stage => (stage.id === updatedStage.id ? updatedStage : stage)));
       setEditingStage(null);
     }
