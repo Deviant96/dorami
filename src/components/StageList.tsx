@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MdDelete, MdEdit } from "react-icons/md";
 import prisma from "@/db/prisma";
+import { createState, deleteState } from "@/datas/states";
 
 interface Stage {
   id: number;
@@ -18,21 +19,16 @@ const StageList: React.FC = () => {
 
   useEffect(() => {
     const fetchStages = async () => {
-      const stages = await prisma.stage.findMany({
-        orderBy: { order: 'asc' }
-      });
-      setStages(stages);
-    };
-
+      const res = await fetch('/api/states').then((res) => res.json())
+      setStages(res.data);
+    }
     fetchStages();
   }, []);
 
   const handleAddStage = async () => {
     if (newStageName.trim()) {
-      const newStage = await prisma.stage.create({
-        data: { name: newStageName },
-      });
-      setStages([...stages, newStage]);
+      const newStage = await createState(newStageName);
+      setStages([...stages, newStage.data]);
       setNewStageName('');
     }
   };
@@ -53,7 +49,7 @@ const StageList: React.FC = () => {
   };
 
   const handleDeleteStage = async (id: number) => {
-    await prisma.stage.delete({ where: { id } });
+    await deleteState(id);
     setStages(stages.filter(stage => stage.id !== id));
   };
 
