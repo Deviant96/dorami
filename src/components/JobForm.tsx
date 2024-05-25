@@ -1,6 +1,7 @@
 "use client";
 
 import { JobWithProgress } from '@/types/JobWithProgress';
+import fillDateForm from '@/utils/fillDateForm';
 import { useState } from 'react';
 
 interface JobFormProps {
@@ -23,7 +24,15 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(job);
+
+    const jobData: any = { ...formData };
+    const date = jobData.date ? jobData.date : fillDateForm(jobData.date);
+    jobData.date = (new Date(date)).toISOString()
+    jobData.isForeign = jobData.isForeign ? jobData.isForeign : false;
+    jobData.details = jobData.details ? jobData.details : "";
+    jobData.status = jobData.status ? jobData.status : "on-going";
+
+    onSave(jobData);
   };
 
   return (
@@ -62,7 +71,8 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         <input
           type="date"
           name="date"
-          value={formData.date.toISOString().split('T')[0]}
+          value={formData.date}
+          // value={formData.date.toISOString().split('T')[0]}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />
@@ -86,7 +96,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         >
           <option value="pass">Pass</option>
           <option value="do not pass">Do Not Pass</option>
-          <option value="on-going">On-Going</option>
+          <option value="on-going" selected>On-Going</option>
           <option value="gone">Gone</option>
           <option value="cancel">Cancel</option>
         </select>

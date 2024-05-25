@@ -5,8 +5,8 @@ import JobCard from "./JobCard";
 import JobForm from "./JobForm";
 import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import prisma from "@/db/prisma";
-import { Job } from "@prisma/client";
 import { JobWithProgress } from "@/types/JobWithProgress";
+import { createJobs, deleteJobs, updateJobs } from "@/datas/jobs";
 
 
 const JobList = (props: { jobs: JobWithProgress[] }) => {
@@ -21,15 +21,14 @@ const JobList = (props: { jobs: JobWithProgress[] }) => {
     fetchJobs();
   }, []);
 
-  const handleSaveJob = async (job: Job) => {
-    const savedJob = job.id
-      ? await prisma.job.update({
-          where: { id: job.id },
-          data: job,
-        })
-      : await prisma.job.create({
-          data: { ...job, order: jobs.length },
-        });
+  const handleSaveJob = async (job: any) => {
+    const res = job.id
+      ? await updateJobs(job)
+      : await createJobs(job, jobs.length);
+      // await prisma.job.create({
+      //     data: { ...job, order: jobs.length },
+      //   });
+    const savedJob = res.data;
 
     setJobs(prevJobs => {
       const jobExists = prevJobs.find(j => j.id === savedJob.id);
@@ -48,7 +47,7 @@ const JobList = (props: { jobs: JobWithProgress[] }) => {
   };
 
   const handleDeleteJob = async (id: number) => {
-    await prisma.job.delete({ where: { id } });
+    await deleteJobs(id);
     setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
   };
 
