@@ -1,7 +1,7 @@
 import prisma from "@/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (req: NextRequest) => {
+export const DELETE = async (req: NextRequest) => {
   const { id } = await req.json();
 
   console.log("API creating new job")

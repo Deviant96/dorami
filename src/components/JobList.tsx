@@ -47,8 +47,8 @@ const JobList = (props: { jobs: JobWithProgress[] }) => {
   };
 
   const handleDeleteJob = async (id: number) => {
-    await deleteJobs(id);
-    setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
+    const res = await deleteJobs(id);
+    res && setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
   };
 
   const handleDropProgress = async (event: React.DragEvent<HTMLDivElement>, jobId: number) => {
