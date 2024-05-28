@@ -23,7 +23,7 @@ const JobList = (props: { jobs: JobWithProgress[] }) => {
 
   const handleSaveJob = async (job: any) => {
     const res = job.id
-      ? await updateJobs(job)
+      ? await updateJobs(job.id, job)
       : await createJobs(job, jobs.length);
       // await prisma.job.create({
       //     data: { ...job, order: jobs.length },
