@@ -18,6 +18,18 @@ model Job {
   status      String
   progress    JobProgress[]
   order       Int       @default(0)
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  email       String?   @unique
+  jobs        Job[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
 }
 
 model JobProgress {
