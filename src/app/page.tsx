@@ -1,4 +1,4 @@
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/NavBar/NavBar";
 import { auth } from "./auth";
 
 export default async function Home() {
