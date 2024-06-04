@@ -6,25 +6,31 @@ import JobForm from "./JobForm";
 import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import prisma from "@/db/prisma";
 import { JobWithProgress } from "@/types/JobWithProgress";
-import { createJobs, deleteJobs, updateJobs } from "@/datas/jobs";
+import { createJobs, deleteJobs, getAllJobs, updateJobs } from "@/datas/jobs";
+import { useSession } from "next-auth/react";
 
-
-const JobList = (props: { jobs: JobWithProgress[] }) => {
-  const [jobs, setJobs] = useState<JobWithProgress[]>(props.jobs);
+const JobList = () => {
+  const [jobs, setJobs] = useState<JobWithProgress[]>([]);
   const [editingJob, setEditingJob] = useState<JobWithProgress | null>(null);
+  const { data: session } = useSession();
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      setJobs(props.jobs);
-    };
+    if(session?.userData.id) {
+      const fetchJobs = async () => {
+        const data = await getAllJobs(parseInt(session?.userData.id as string));
+        setJobs(data);
+      };
 
-    fetchJobs();
-  }, []);
+      fetchJobs();
+    }
+  }, [session?.userData.id]);
 
   const handleSaveJob = async (job: any) => {
+    if(!session) return null;
+    const userId = parseInt(session.userData.id as string);
     const res = job.id
       ? await updateJobs(job.id, job)
-      : await createJobs(job, jobs.length);
+      : await createJobs(userId, job, jobs.length);
       // await prisma.job.create({
       //     data: { ...job, order: jobs.length },
       //   });
@@ -113,7 +119,7 @@ const JobList = (props: { jobs: JobWithProgress[] }) => {
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
-              {jobs.map((job, index) => (
+              {Array.from(jobs).map((job, index) => (
                 <Draggable
                   key={job.id.toString()}
                   draggableId={job.id.toString()}

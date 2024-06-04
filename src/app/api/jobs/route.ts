@@ -1,9 +1,10 @@
-'use server';
-
 import prisma from "@/db/prisma";
 import { JobWithProgress } from "@/types/JobWithProgress";
+import { NextRequest, NextResponse } from "next/server";
 
-export const getAllJobs = async () => {
+export const POST = async (req: NextRequest) => {
+  const { userId } = await req.json();
+
   const jobs: JobWithProgress[] = await prisma.job.findMany({
     include: {
       progress: {
@@ -12,8 +13,11 @@ export const getAllJobs = async () => {
         },
       },
     },
+    where: { userId: userId },
     orderBy: { order: "asc" },
   });
+  console.log('jobs', jobs)
 
-  return jobs;
+
+  return NextResponse.json(jobs);
 };

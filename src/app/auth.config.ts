@@ -37,13 +37,18 @@ export const authConfig = {
         token.id = account.id_token;
         token.provider = account.provider;
         token.accessToken = account.access_token;
-        token.user = user
+        token.user = user;
+        token.username = user.username
       }
       return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
-      session.user = token.user as AdapterUser
+      session.userData = {
+        id: token.sub,
+        email: token.email,
+        username: token.username,
+      }
       return session;
     },
     async signIn({ user, account, profile, email, credentials }) {

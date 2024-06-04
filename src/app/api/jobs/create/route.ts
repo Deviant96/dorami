@@ -2,22 +2,23 @@ import prisma from "@/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
-  const { job, jobLength } = await req.json();
+  const { userId, job, jobLength } = await req.json();
 
-  console.log("API creating new job")
+  if (!userId) {
+    return NextResponse.json({ message: "User ID details required" }, { status: 500 });
+  }
 
   if (!job) {
     return NextResponse.json({ message: "Job details required" }, { status: 500 });
   }
-  if (!jobLength) {
+
+  if (jobLength === undefined) {
     return NextResponse.json({ message: "Job length required" }, { status: 500 });
   }
 
   const data = await prisma.job.create({
-    data: { ...job, order: jobLength },
+    data: { ...job, order: jobLength, userId: userId },
   })
-
-  console.log("API data for creating new job")
-  console.log(data);
+  
   return NextResponse.json({ data }, { status: 200 });
 };

@@ -1,14 +1,33 @@
 import { Job } from "@/types/Job";
 import { JobWithProgress } from "@/types/JobWithProgress";
 
-export const createJobs = async (job: any, jobLength: number) => {
+export const getAllJobs = async (userId: number) => {
+  try {
+    const res = await fetch("/api/jobs", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    const data = await res.json();
+
+    return data;
+  } catch (error: any) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const createJobs = async (userId: number, job: any, jobLength: number) => {
   try {
     const res = await fetch("/api/jobs/create", {
       method: "POST",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ job, jobLength }),
+      body: JSON.stringify({ userId, job, jobLength }),
     });
 
     const data = await res.json();

@@ -40,7 +40,7 @@ const Navbar = () => {
                 <NavItem>
                   {session ? (
                     <>
-                      {`Hi ${session?.user?.username}, `}
+                      {`Hi ${session?.userData?.username}, `}
                       <button className="text-red-500" onClick={handleSignOut}>
                         Sign Out
                       </button>
@@ -117,7 +117,7 @@ const Navbar = () => {
           <NavItem>
             {session ? (
               <>
-                {`Hi ${session?.user?.username}, `}
+                {`Hi ${session?.userData?.username}, `}
                 <button className="text-red-500" onClick={handleSignOut}>
                   Sign Out
                 </button>
