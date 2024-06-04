@@ -50,6 +50,7 @@ export const {
         //     username: credentials.username as string
         //   }
         // })
+        console.log("authorize returns "+JSON.stringify(user))
         
         return user as any;
       },

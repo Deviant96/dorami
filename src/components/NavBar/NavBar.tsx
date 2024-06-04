@@ -19,8 +19,6 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-md">
-      <p>Signed in as {session?.user?.name}</p>
-      {JSON.stringify(status)}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center w-full">
@@ -29,7 +27,7 @@ const Navbar = () => {
                 Job Tracker
               </Link>
             </div>
-            <div className="hidden md:flex md:content-between w-full justify-between">
+            <div className="hidden lg:flex lg:content-between w-full justify-between">
               <div className="ml-10 flex items-baseline space-x-4">
                 <NavItem>
                   <Link href={"job-tracker"}>Job Application Tracker</Link>
@@ -42,7 +40,7 @@ const Navbar = () => {
                 <NavItem>
                   {session ? (
                     <>
-                      Hi, {session?.user?.name}
+                      {`Hi ${session?.user?.username}, `}
                       <button className="text-red-500" onClick={handleSignOut}>
                         Sign Out
                       </button>
@@ -54,7 +52,7 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-          <div className="-mr-2 flex md:hidden">
+          <div className="-mr-2 flex lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
@@ -102,18 +100,31 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`${isOpen ? "block" : "hidden"} md:hidden`}
+        className={`${
+          isOpen ? "flex flex-col justify-between" : "hidden"
+        } lg:hidden`}
         id="mobile-menu"
       >
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <NavItem>
-            <Link href="/">Home</Link>
+            <Link href={"job-tracker"}>Job Application Tracker</Link>
           </NavItem>
           <NavItem>
-            <Link href="/about">About</Link>
+            <Link href={"manage-states"}>Manage Stages</Link>
           </NavItem>
+        </div>
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <NavItem>
-            <Link href="/contact">Contact</Link>
+            {session ? (
+              <>
+                {`Hi ${session?.user?.username}, `}
+                <button className="text-red-500" onClick={handleSignOut}>
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <Link href={"/login"}>Sign In</Link>
+            )}
           </NavItem>
         </div>
       </div>

@@ -8,6 +8,12 @@ declare module "next-auth" {
   interface Session {
     accessToken?: string;
   }
+
+  export interface User {
+    id?: number
+    username?: string
+    email?: string
+  }
 }
 
 declare module "next-auth/jwt" {
