@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Form } from '@/app/form';
+// import { Form } from '@/components/LoginForm';
 // import { signIn } from 'next-auth/react';
 import { SubmitButton } from '@/components/SubmitButton';
 import { FormEvent, useState } from 'react';
@@ -46,7 +46,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
+    <div className="flex w-screen items-center justify-center bg-gray-50 p-4">
       <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
         {/* {error && (<div>{error}</div>)} */}
         <div className="flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white px-4 py-6 pt-8 text-center sm:px-16">
