@@ -8,10 +8,11 @@ interface JobFormProps {
   job: JobWithProgress;
   onSave: (job: JobWithProgress) => void;
   onCancel: () => void;
-  existingJob?: JobWithProgress;
+  isUpdatingJob?: boolean;
 }
 
-const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
+const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob }) => {
+  console.log('isUpdatingJob', isUpdatingJob)
   const [formData, setFormData] = useState(job);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -34,6 +35,8 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
 
     onSave(jobData);
   };
+
+  console.log(new Date (formData.date).toISOString().split('T')[0]);
 
   return (
     <form onSubmit={handleSubmit} className="p-4 border rounded shadow-md bg-white mb-4">
@@ -71,8 +74,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel }) => {
         <input
           type="date"
           name="date"
-          value={formData.date}
-          // value={formData.date.toISOString().split('T')[0]}
+          value={new Date(formData.date).toISOString().split('T')[0]}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />

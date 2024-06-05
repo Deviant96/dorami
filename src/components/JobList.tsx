@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 const JobList = () => {
   const [jobs, setJobs] = useState<JobWithProgress[]>([]);
   const [editingJob, setEditingJob] = useState<JobWithProgress | null>(null);
+  console.log('editingJob', editingJob)
   const { data: session } = useSession();
   const [userId, setUserId] = useState<number | null>(null);
 
@@ -115,6 +116,7 @@ const JobList = () => {
           job={editingJob}
           onSave={handleSaveJob}
           onCancel={() => setEditingJob(null)}
+          isUpdatingJob={Object.keys(editingJob).length !== 0}
         />
       )}
       <DragDropContext onDragEnd={handleDragEnd}>
