@@ -2,7 +2,7 @@ import prisma from "@/db/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PUT = async (req: NextRequest) => {
-  const { id, job } = await req.json();
+  const { userId, id, job } = await req.json();
 
   if (!job) {
     return NextResponse.json({ message: "Job details required" }, { status: 500 });
@@ -16,7 +16,7 @@ export const PUT = async (req: NextRequest) => {
   // it can only be done by removing the job and adding it again. 
   // Uncomment progress if such feature is implemented.
   const updatedJob = await prisma.job.update({
-    where: { id: job.id },
+    where: { id: job.id, userId: userId },
     data: {
       companyName: job.companyName,
       isForeign: job.isForeign,

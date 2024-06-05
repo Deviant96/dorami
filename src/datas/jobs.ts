@@ -58,17 +58,14 @@ export const deleteJobs = async (userId: number, id: number) => {
   }
 };
 
-export const updateJobs = async (jobId: number, job: JobWithProgress) => {
-  console.log('updateJobs');
+export const updateJobs = async (userId: number, jobId: number, job: JobWithProgress) => {
   try {
-    // const { companyName, isForeign, details, date, notes, status, order, progress } = job;
-
     const res = await fetch("/api/jobs/update", {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ id: jobId, job: job }),
+      body: JSON.stringify({ userId, id: jobId, job: job }),
     });
     console.log('res :', res);
 

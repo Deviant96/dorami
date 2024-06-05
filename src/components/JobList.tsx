@@ -34,7 +34,7 @@ const JobList = () => {
     if(!session) return null;
     const userId = parseInt(session.userData.id as string);
     const res = job.id
-      ? await updateJobs(job.id, job)
+      ? await updateJobs(userId, job.id, job)
       : await createJobs(userId, job, jobs.length);
       // await prisma.job.create({
       //     data: { ...job, order: jobs.length },
