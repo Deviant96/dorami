@@ -92,13 +92,13 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob 
         <label className="block text-gray-700">Status</label>
         <select
           name="status"
-          value={formData.status}
+          value={formData.status || "on-going"}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         >
           <option value="pass">Pass</option>
           <option value="do not pass">Do Not Pass</option>
-          <option value="on-going" selected>On-Going</option>
+          <option value="on-going">On-Going</option>
           <option value="gone">Gone</option>
           <option value="cancel">Cancel</option>
         </select>
