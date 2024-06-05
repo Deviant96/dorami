@@ -96,10 +96,7 @@ const JobList = () => {
     setJobs(reorderedJobs);
 
     for (let i = 0; i < reorderedJobs.length; i++) {
-      await prisma.job.update({
-        where: { id: reorderedJobs[i].id },
-        data: { order: i }
-      });
+      updateJobs(userId as number, reorderedJobs[i].id, i)
     }
   };
 
