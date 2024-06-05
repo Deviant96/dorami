@@ -13,17 +13,22 @@ const JobList = () => {
   const [jobs, setJobs] = useState<JobWithProgress[]>([]);
   const [editingJob, setEditingJob] = useState<JobWithProgress | null>(null);
   const { data: session } = useSession();
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
-    if(session?.userData.id) {
+    if (session) {
+      setUserId(parseInt(session.userData.id as string));
+    }
+
+    if(userId) {
       const fetchJobs = async () => {
-        const data = await getAllJobs(parseInt(session?.userData.id as string));
+        const data = await getAllJobs(userId);
         setJobs(data);
       };
 
       fetchJobs();
     }
-  }, [session?.userData.id]);
+  }, [session, userId]);
 
   const handleSaveJob = async (job: any) => {
     if(!session) return null;
@@ -53,7 +58,8 @@ const JobList = () => {
   };
 
   const handleDeleteJob = async (id: number) => {
-    const res = await deleteJobs(id);
+    if(!userId) return null;
+    const res = await deleteJobs(userId, id);
     res && setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
   };
 

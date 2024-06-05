@@ -39,14 +39,14 @@ export const createJobs = async (userId: number, job: any, jobLength: number) =>
   }
 };
 
-export const deleteJobs = async (id: number) => {
+export const deleteJobs = async (userId: number, id: number) => {
   try {
     const res = await fetch("/api/jobs/delete", {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ id: id }),
+      body: JSON.stringify({ userId, id }),
     });
 
     const data = await res.json();
