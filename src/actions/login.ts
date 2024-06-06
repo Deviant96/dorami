@@ -10,11 +10,9 @@ export const login = async (values: any) => {
       username: values.get("username") as string,
       password: values.get("password") as string,
     });
-    // console.log("eee", eee);
-        console.log('eee', eee)
+
     return eee;
   } catch (error: any) {
-    // console.log("error", error);
     // setError(theError)
     return error;
   }

@@ -53,7 +53,6 @@ const StageList: React.FC = () => {
       const name = editingStage.name;
 
       const updatedStage = await updateState(userId, id, name);
-      console.log(updatedStage.id)
       setStages(stages.map(stage => (stage.id === updatedStage.id ? updatedStage : stage)));
       setEditingStage(null);
     }

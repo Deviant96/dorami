@@ -16,7 +16,6 @@ export const POST = async (req: NextRequest) => {
     where: { userId: userId },
     orderBy: { order: "asc" },
   });
-  console.log('jobs', jobs)
 
 
   return NextResponse.json(jobs);

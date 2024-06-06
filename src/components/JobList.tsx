@@ -14,7 +14,6 @@ import InterviewProgressNav from "./InterviewProgressNav";
 const JobList = () => {
   const [jobs, setJobs] = useState<JobWithProgress[]>([]);
   const [editingJob, setEditingJob] = useState<JobWithProgress | null>(null);
-  console.log('editingJob', editingJob)
   const { data: session } = useSession();
   const [userId, setUserId] = useState<number | null>(null);
 

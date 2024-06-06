@@ -12,11 +12,7 @@ export const authConfig = {
   providers: [],
   callbacks: {
     authorized({ request: { nextUrl }, auth }) {
-      // console.log('nextUrl', nextUrl)
-      //   console.log("authorized");
       let isLoggedIn = !!auth?.user;
-      //   console.log("auth", auth);
-      //   console.log("isLoggedIn", isLoggedIn);
       let isOnJobTracker = nextUrl.pathname.startsWith("/job-tracker");
       let isOnManageStates = nextUrl.pathname.startsWith("/manage-states");
 
@@ -29,7 +25,6 @@ export const authConfig = {
     async redirect({ url, baseUrl }) {
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       else if (new URL(url).origin === baseUrl) return url;
-      console.log('new URL(url).origin', new URL(url).origin)
       return baseUrl;
     },
     async jwt({ token, user, account }) {
@@ -52,7 +47,6 @@ export const authConfig = {
       return session;
     },
     async signIn({ user, account, profile, email, credentials }) {
-      console.log("sign in callback")
         return true;
     },
   },

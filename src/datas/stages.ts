@@ -12,7 +12,6 @@ export const getAllStages = async (userId: number) => {
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -31,7 +30,6 @@ export const getStageByName = async (userId: number, stageName: string) => {
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -50,7 +48,6 @@ export const createState = async (userId: number, name: string) => {
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -69,7 +66,6 @@ export const deleteState = async (userId: number, id: number) => {
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -95,7 +91,6 @@ export const updateState = async (userId: number, id: number, nameOrOrder: strin
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -114,7 +109,6 @@ export const assignJobProgress = async (userId: number, jobId: number, stageId: 
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };

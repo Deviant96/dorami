@@ -31,7 +31,6 @@ const Page = () => {
       // const existingUser = await axios.get(`/api/auth/user?email=${email}`);
       const existingUser = await findByUsername(username);
       if (existingUser?.username) {
-       console.log('Username is already registered.');
         return;
       }
 
@@ -39,7 +38,6 @@ const Page = () => {
       await createUser(username, password, email)
       await signIn('credentials', { username, password });
     } catch (error:any) {
-      console.log('error', error)
     }
   };
 

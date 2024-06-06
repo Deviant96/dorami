@@ -21,11 +21,8 @@ export default function Login() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     // "use server";
-    console.log("login form action")
     // const username = formData.get("username") as string;
-    // console.log('username', username)
     // const password = formData.get("password") as string;
-    // console.log('password', password)
 
     try {
       // await signIn('credentials', { username, password });
@@ -36,13 +33,10 @@ export default function Login() {
         // redirect: false,
       });
 
-      // console.log({ response });
     } catch(error: any) {
       console.error("Login Failed:", error);
     }
-    // console.log('formData', formData)
     // const data = await login(formData);
-    // console.log(data)
   }
 
   return (

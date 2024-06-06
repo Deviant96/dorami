@@ -6,17 +6,13 @@ import type { NextRequest } from 'next/server'
 // const { auth } = NextAuth(authConfig);
 
 const authRoutes = ["/auth/login", "/auth/register"]
-// console.log('authRoutes', authRoutes)
 
 export default NextAuth(authConfig).auth;
 
 // export default auth((req) => {
 //   const isLoggedin = !!req.auth;
-//   console.log('isLoggedin', isLoggedin)
 //   const isAuthRoute = authRoutes.includes(req.nextUrl.pathname);
-//   console.log('isAuthRoute', isAuthRoute)
 //   const isApiAuthRouter = req.nextUrl.pathname.startsWith("/api/auth");
-//   console.log('isApiAuthRouter', isApiAuthRouter)
   
   
 

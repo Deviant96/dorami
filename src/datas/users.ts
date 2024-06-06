@@ -16,7 +16,6 @@ export const createUser = async (
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -37,7 +36,6 @@ export const findByUsername = async (
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };

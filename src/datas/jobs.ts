@@ -15,7 +15,6 @@ export const getAllJobs = async (userId: number) => {
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -34,7 +33,6 @@ export const createJobs = async (userId: number, job: any, jobLength: number) =>
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -53,7 +51,6 @@ export const deleteJobs = async (userId: number, id: number) => {
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
@@ -78,7 +75,6 @@ export const updateJobs = async (userId: number, jobId: number, jobOrOrder?: Job
 
     return data;
   } catch (error: any) {
-    console.log(error);
     return error;
   }
 };
