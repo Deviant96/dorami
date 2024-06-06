@@ -71,7 +71,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob 
         <input
           type="date"
           name="date"
-          value={new Date(formData.date).toISOString().split('T')[0]}
+          value={isUpdatingJob ? new Date(formData.date).toISOString().split('T')[0] : ''}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />
