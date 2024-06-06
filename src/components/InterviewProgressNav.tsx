@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllStages } from '@/datas/stages';
+import { getAllStages } from '@/libs/stages';
 import prisma from '@/db/prisma';
 import { Stages } from '@/types/Stages';
 import { useSession } from 'next-auth/react';

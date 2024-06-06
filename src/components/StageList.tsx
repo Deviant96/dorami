@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MdDelete, MdEdit } from "react-icons/md";
 import prisma from "@/db/prisma";
-import { createState, deleteState, getAllStages, updateState } from "@/datas/stages";
+import { createState, deleteState, getAllStages, updateState } from "@/libs/stages";
 import { useSession } from "next-auth/react";
 
 interface Stage {

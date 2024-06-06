@@ -7,7 +7,7 @@ import Input from '@/components/Input';
 import prisma from '@/db/prisma';
 import { User } from '@prisma/client';
 import { hash } from 'bcryptjs';
-import { createUser, findByUsername } from '@/datas/users';
+import { createUser, findByUsername } from '@/libs/users';
 import { useRouter } from 'next/navigation';
 
 const Page = () => {

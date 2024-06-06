@@ -5,7 +5,7 @@ import Link from 'next/link';
 // import { signIn } from 'next-auth/react';
 import { SubmitButton } from '@/components/SubmitButton';
 import { FormEvent, useState } from 'react';
-import { login } from '@/actions/login';
+import { login } from '@/libs/login';
 import credentials from 'next-auth/providers/credentials';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';

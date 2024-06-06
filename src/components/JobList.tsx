@@ -6,9 +6,9 @@ import JobForm from "./JobForm";
 import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
 import prisma from "@/db/prisma";
 import { JobWithProgress } from "@/types/JobWithProgress";
-import { createJobs, deleteJobs, getAllJobs, updateJobs } from "@/datas/jobs";
+import { createJobs, deleteJobs, getAllJobs, updateJobs } from "@/libs/jobs";
 import { useSession } from "next-auth/react";
-import { assignJobProgress, getStageByName } from "@/datas/stages";
+import { assignJobProgress, getStageByName } from "@/libs/stages";
 import InterviewProgressNav from "./InterviewProgressNav";
 
 const JobList = () => {
