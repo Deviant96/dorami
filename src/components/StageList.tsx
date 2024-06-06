@@ -76,8 +76,13 @@ const StageList: React.FC = () => {
 
   const handleDeleteStage = async (id: number) => {
     if (!userId) return;
-    await deleteState(userId, id);
-    setStages(stages.filter(stage => stage.id !== id));
+    const stageResponse = await deleteState(userId, id);
+    if(stageResponse.success && stageResponse.data) {
+      setStages(stages.filter(stage => stage.id !== id));
+    } else {
+      console.error(stageResponse.message || "Failed to delete stage");
+    }
+
   };
 
   const handleDragEnd = async (result: any) => {
