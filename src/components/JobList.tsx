@@ -10,6 +10,7 @@ import { createJobs, deleteJobs, getAllJobs, updateJobs } from "@/libs/jobs";
 import { useSession } from "next-auth/react";
 import { assignJobProgress, getStageByName } from "@/libs/stages";
 import InterviewProgressNav from "./InterviewProgressNav";
+import { Stage } from "@/types/Stage";
 
 const JobList = () => {
   const [jobs, setJobs] = useState<JobWithProgress[]>([]);
@@ -66,12 +67,14 @@ const JobList = () => {
   };
 
   const handleDropProgress = async (event: React.DragEvent<HTMLDivElement>, jobId: number) => {
-    if(!userId) return;
+    if (!userId) return;
     const stageName = event.dataTransfer.getData('stage');
-    const stage = await getStageByName(userId, stageName);
+    const stageResponse = await getStageByName(userId, stageName);
 
-    if (stage) {
-      await assignJobProgress(userId, jobId, stage.id)
+    if (stageResponse.success && stageResponse.data) {
+      const stage: Stage = stageResponse.data;
+
+      await assignJobProgress(userId, jobId, stage.id);
 
       setJobs(prevJobs =>
         prevJobs.map(job =>

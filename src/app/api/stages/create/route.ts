@@ -14,5 +14,5 @@ export const POST = async (req: NextRequest) => {
   const data = await prisma.stage.create({
     data: { name, userId }
   });
-  return NextResponse.json({ data }, { status: 200 });
+  return NextResponse.json(data, { status: 200 });
 };

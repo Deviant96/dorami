@@ -2,7 +2,7 @@
 
 import { getAllStages } from '@/libs/stages';
 import prisma from '@/db/prisma';
-import { Stages } from '@/types/Stages';
+import { Stage } from '@/types/Stage';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -14,8 +14,13 @@ const InterviewProgressNav: React.FC = () => {
   useEffect(() => {
     const fetchStages = async () => {
       if (!session) return;
-      const stages: Stages[] = await getAllStages(parseInt(session?.userData.id as string));
-      setStages(stages.map(stage => stage.name));
+      const stageResponse = await getAllStages(parseInt(session?.userData.id as string));
+      if (stageResponse.success && stageResponse.data) {
+        const stages: Stage[] = stageResponse.data;
+        setStages(stages.map(stage => stage.name));
+      } else {
+        console.error(stageResponse.message || "Failed to fetch stages");
+      }
     };
 
     fetchStages();

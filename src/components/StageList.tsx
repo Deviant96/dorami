@@ -27,8 +27,14 @@ const StageList: React.FC = () => {
 
     const fetchStages = async () => {
       if (!userId) return;
-      const res = await getAllStages(userId);
-      setStages(res);
+      const stageResponse = await getAllStages(userId);
+
+      if (stageResponse.success && stageResponse.data) {
+        const stage: Stage[] = stageResponse.data;
+        setStages(stage);
+      } else {
+        console.error(stageResponse.message || "Failed to fetch stages");
+      }
     }
     fetchStages();
   }, [session, userId]);
@@ -36,9 +42,14 @@ const StageList: React.FC = () => {
   const handleAddStage = async () => {
     if (!userId) return;
     if (newStageName.trim()) {
-      const newStage = await createState(userId, newStageName);
-      setStages([...stages, newStage.data]);
-      setNewStageName('');
+      const stageResponse = await createState(userId, newStageName);
+      if (stageResponse.success && stageResponse.data) {
+        const stage: Stage = stageResponse.data;
+        setStages([...stages, stage]);
+        setNewStageName('');
+      } else {
+        console.error(stageResponse.message || "Failed to create stage");
+      }
     }
   };
 
@@ -52,9 +63,14 @@ const StageList: React.FC = () => {
       const id = editingStage.id;
       const name = editingStage.name;
 
-      const updatedStage = await updateState(userId, id, name);
-      setStages(stages.map(stage => (stage.id === updatedStage.id ? updatedStage : stage)));
-      setEditingStage(null);
+      const updatedStageResponse = await updateState(userId, id, name);
+      if (updatedStageResponse.success && updatedStageResponse.data) {
+        const updatedStage: Stage = updatedStageResponse.data;
+        setStages(stages.map(stage => (stage.id === updatedStage.id ? updatedStage : stage)));
+        setEditingStage(null);
+      } else {
+        console.error(updatedStageResponse.message || "Failed to update stage")
+      }
     }
   };
 

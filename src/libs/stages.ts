@@ -1,76 +1,52 @@
-export const getAllStages = async (userId: number) => {
-  try {
-    const res = await fetch("/api/stages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
+import { Stage } from "@/types/Stage";
+import { fetchFromApi } from "./api";
+
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+}
+
+export const getAllStages = async (userId: number): Promise<ApiResponse<Stage[]>> => {
+  return await fetchFromApi('/api/stages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ userId }),
     });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error: any) {
-    return error;
-  }
 };
 
-export const getStageByName = async (userId: number, stageName: string) => {
-  try {
-    const res = await fetch("/api/stages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ userId, stageName }),
-    });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error: any) {
-    return error;
-  }
+export const getStageByName = async (userId: number, stageName: string): Promise<ApiResponse<Stage>> => {
+  return await fetchFromApi("/api/stages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ userId, stageName }),
+  });
 };
 
-export const createState = async (userId: number, name: string) => {
-  try {
-    const res = await fetch("/api/stages/create", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ userId, name }),
-    });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error: any) {
-    return error;
-  }
+export const createState = async (userId: number, name: string): Promise<ApiResponse<Stage>> => {
+  return await fetchFromApi("/api/stages/create", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ userId, name }),
+  });
 };
 
-export const deleteState = async (userId: number, id: number) => {
-  try {
-    const res = await fetch("/api/stages/delete", {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ userId, id }),
-    });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error: any) {
-    return error;
-  }
+export const deleteState = async (userId: number, id: number): Promise<ApiResponse<Stage>> => {
+  return await fetchFromApi("/api/stages/delete", {
+    method: "DELETE",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ userId, id }),
+  });
 };
 
-export const updateState = async (userId: number, id: number, nameOrOrder: string | number) => {
+export const updateState = async (userId: number, id: number, nameOrOrder: string | number): Promise<ApiResponse<Stage>> => {
   let name, order;
   if (typeof nameOrOrder === 'string') {
     name = nameOrOrder;
@@ -78,37 +54,21 @@ export const updateState = async (userId: number, id: number, nameOrOrder: strin
     order = nameOrOrder;
   }
 
-  try {
-    const res = await fetch("/api/stages/update", {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ userId, id, name, order }),
-    });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error: any) {
-    return error;
-  }
+  return await fetchFromApi("/api/stages/update", {
+    method: "PUT",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ userId, id, name, order }),
+  });
 };
 
-export const assignJobProgress = async (userId: number, jobId: number, stageId: number) => {
-  try {
-    const res = await fetch("/api/jobs/assignStage", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({ userId, jobId, stageId }),
-    });
-
-    const data = await res.json();
-
-    return data;
-  } catch (error: any) {
-    return error;
-  }
+export const assignJobProgress = async (userId: number, jobId: number, stageId: number): Promise<ApiResponse<Stage>> => {
+  return await fetchFromApi("/api/jobs/assignStage", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ userId, jobId, stageId }),
+  });
 };
