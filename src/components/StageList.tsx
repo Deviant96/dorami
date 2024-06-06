@@ -75,10 +75,7 @@ const StageList: React.FC = () => {
     setStages(reorderedStages);
 
     for (let i = 0; i < reorderedStages.length; i++) {
-      await prisma.stage.update({
-        where: { id: reorderedStages[i].id },
-        data: { order: i }
-      });
+      await updateState(userId as number, reorderedStages[i].id, i)
     }
   };
 

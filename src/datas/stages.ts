@@ -74,14 +74,21 @@ export const deleteState = async (userId: number, id: number) => {
   }
 };
 
-export const updateState = async (userId: number, id: number, name: string) => {
+export const updateState = async (userId: number, id: number, nameOrOrder: string | number) => {
+  let name, order;
+  if (typeof nameOrOrder === 'string') {
+    name = nameOrOrder;
+  } else {
+    order = nameOrOrder;
+  }
+
   try {
     const res = await fetch("/api/stages/update", {
       method: "PUT",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify({ userId, id, name }),
+      body: JSON.stringify({ userId, id, name, order }),
     });
 
     const data = await res.json();
