@@ -33,7 +33,7 @@ const Navbar = () => {
                   <Link href={"job-tracker"}>Job Application Tracker</Link>
                 </NavItem>
                 <NavItem>
-                  <Link href={"manage-states"}>Manage Stages</Link>
+                  <Link href={"manage-stages"}>Manage Stages</Link>
                 </NavItem>
               </div>
               <div className="ml-10 flex items-baseline space-x-4">
@@ -110,7 +110,7 @@ const Navbar = () => {
             <Link href={"job-tracker"}>Job Application Tracker</Link>
           </NavItem>
           <NavItem>
-            <Link href={"manage-states"}>Manage Stages</Link>
+            <Link href={"manage-stages"}>Manage Stages</Link>
           </NavItem>
         </div>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">

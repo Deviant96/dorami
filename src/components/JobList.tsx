@@ -8,6 +8,8 @@ import prisma from "@/db/prisma";
 import { JobWithProgress } from "@/types/JobWithProgress";
 import { createJobs, deleteJobs, getAllJobs, updateJobs } from "@/datas/jobs";
 import { useSession } from "next-auth/react";
+import { assignJobProgress, getStageByName } from "@/datas/stages";
+import InterviewProgressNav from "./InterviewProgressNav";
 
 const JobList = () => {
   const [jobs, setJobs] = useState<JobWithProgress[]>([]);
@@ -65,21 +67,17 @@ const JobList = () => {
   };
 
   const handleDropProgress = async (event: React.DragEvent<HTMLDivElement>, jobId: number) => {
+    if(!userId) return;
     const stageName = event.dataTransfer.getData('stage');
-    const stage = await prisma.stage.findFirst({ where: { name: stageName } });
+    const stage = await getStageByName(userId, stageName);
 
     if (stage) {
-      await prisma.jobProgress.create({
-        data: {
-          jobId,
-          stageId: stage.id,
-        },
-      });
+      await assignJobProgress(userId, jobId, stage.id)
 
       setJobs(prevJobs =>
         prevJobs.map(job =>
           job.id === jobId
-            ? { ...job, progress: [...job.progress, { stage, jobId, stageId: stage.id, id: 0 }] }
+            ? { ...job, progress: [...job.progress, { stage, jobId, stageId: stage.id, id: 0, userId }] }
             : job
         )
       );
@@ -153,7 +151,7 @@ const JobList = () => {
           )}
         </Droppable>
       </DragDropContext>
-      {/* <InterviewProgressNav /> */}
+      <InterviewProgressNav />
     </div>
   );
 };

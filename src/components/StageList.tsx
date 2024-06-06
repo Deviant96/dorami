@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MdDelete, MdEdit } from "react-icons/md";
 import prisma from "@/db/prisma";
-import { createState, deleteState, updateState } from "@/datas/states";
+import { createState, deleteState, getAllStages, updateState } from "@/datas/stages";
+import { useSession } from "next-auth/react";
 
 interface Stage {
   id: number;
@@ -16,18 +17,26 @@ const StageList: React.FC = () => {
   const [stages, setStages] = useState<Stage[]>([]);
   const [newStageName, setNewStageName] = useState("");
   const [editingStage, setEditingStage] = useState<Stage | null>(null);
+  const { data: session } = useSession();
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
+    if (session) {
+      setUserId(parseInt(session.userData.id as string));
+    }
+
     const fetchStages = async () => {
-      const res = await fetch('/api/states').then((res) => res.json())
-      setStages(res.data);
+      if (!userId) return;
+      const res = await getAllStages(userId);
+      setStages(res);
     }
     fetchStages();
-  }, []);
+  }, [session, userId]);
 
   const handleAddStage = async () => {
+    if (!userId) return;
     if (newStageName.trim()) {
-      const newStage = await createState(newStageName);
+      const newStage = await createState(userId, newStageName);
       setStages([...stages, newStage.data]);
       setNewStageName('');
     }
@@ -38,11 +47,12 @@ const StageList: React.FC = () => {
   };
 
   const handleSaveEdit = async () => {
+    if (!userId) return;
     if (editingStage && editingStage.name.trim()) {
       const id = editingStage.id;
       const name = editingStage.name;
 
-      const updatedStage = await updateState(id, name);
+      const updatedStage = await updateState(userId, id, name);
       console.log(updatedStage.id)
       setStages(stages.map(stage => (stage.id === updatedStage.id ? updatedStage : stage)));
       setEditingStage(null);
@@ -50,7 +60,8 @@ const StageList: React.FC = () => {
   };
 
   const handleDeleteStage = async (id: number) => {
-    await deleteState(id);
+    if (!userId) return;
+    await deleteState(userId, id);
     setStages(stages.filter(stage => stage.id !== id));
   };
 
