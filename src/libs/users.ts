@@ -20,9 +20,7 @@ export const createUser = async (
   }
 };
 
-export const findByUsername = async (
-  username: string
-) => {
+export const findByUsername = async (username: string) => {
   try {
     const res = await fetch(`/api/users/find/${username}`, {
       method: "POST",

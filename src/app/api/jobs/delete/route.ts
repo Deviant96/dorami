@@ -5,11 +5,17 @@ export const DELETE = async (req: NextRequest) => {
   const { userId, id } = await req.json();
 
   if (!userId) {
-    return NextResponse.json({ message: "User ID cannot be empty" }, { status: 500 });
+    return NextResponse.json(
+      { message: "User ID cannot be empty" },
+      { status: 500 }
+    );
   }
 
   if (!id) {
-    return NextResponse.json({ message: "ID cannot be empty" }, { status: 500 });
+    return NextResponse.json(
+      { message: "ID cannot be empty" },
+      { status: 500 }
+    );
   }
 
   const data = await prisma.job.delete({ where: { id, userId } });

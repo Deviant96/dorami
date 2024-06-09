@@ -4,23 +4,26 @@ import { NextRequest, NextResponse } from "next/server";
 export const PUT = async (req: NextRequest) => {
   const { userId, id, jobOrOrder } = await req.json();
   let order, job, updatedJob;
-  if (typeof(jobOrOrder) === 'number') order = jobOrOrder
-    else job = jobOrOrder;
+  if (typeof jobOrOrder === "number") order = jobOrOrder;
+  else job = jobOrOrder;
 
   if (!id) {
     return NextResponse.json({ message: "ID is required" }, { status: 500 });
   }
-  
+
   if (order !== undefined) {
     await prisma.job.update({
       where: { id: id },
-      data: { order: order }
+      data: { order: order },
     });
   } else {
     if (!job)
-      return NextResponse.json({ message: "Job details required" }, { status: 500 });
-    // Currently, if a user wants to edit progress in a job, 
-    // it can only be done by removing the job and adding it again. 
+      return NextResponse.json(
+        { message: "Job details required" },
+        { status: 500 }
+      );
+    // Currently, if a user wants to edit progress in a job,
+    // it can only be done by removing the job and adding it again.
     // Uncomment progress if such feature is implemented.
     updatedJob = await prisma.job.update({
       where: { id: job.id, userId: userId },
@@ -54,7 +57,7 @@ export const PUT = async (req: NextRequest) => {
         //     }
         //   }))
         // }
-      }
+      },
     });
   }
 

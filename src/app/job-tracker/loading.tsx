@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
 import { JobCardSkeleton } from "@/app/job-tracker/(components)/JobCardSkeleton";
 
 const Loading: React.FC = () => {
-  return <JobCardSkeleton />
+  return <JobCardSkeleton />;
 };
 
 export default Loading;

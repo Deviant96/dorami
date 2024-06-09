@@ -1,8 +1,10 @@
 import prisma from "@/db/prisma";
-import { NextApiRequest } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (req: NextRequest, { params }: { params: { username: string } }) => {
+export const POST = async (
+  req: NextRequest,
+  { params }: { params: { username: string } }
+) => {
   const username = params.username;
 
   if (!username) {
@@ -12,7 +14,7 @@ export const POST = async (req: NextRequest, { params }: { params: { username: s
   const data = await prisma.user.findFirst({
     where: {
       username: username,
-    }
+    },
   });
 
   return NextResponse.json({ data }, { status: 200 });

@@ -1,4 +1,3 @@
-import { Job } from "@/types/Job";
 import { JobWithProgress } from "@/types/JobWithProgress";
 
 export const getAllJobs = async (userId: number) => {
@@ -19,7 +18,11 @@ export const getAllJobs = async (userId: number) => {
   }
 };
 
-export const createJobs = async (userId: number, job: any, jobLength: number) => {
+export const createJobs = async (
+  userId: number,
+  job: any,
+  jobLength: number
+) => {
   try {
     const res = await fetch("/api/jobs/create", {
       method: "POST",
@@ -55,12 +58,16 @@ export const deleteJobs = async (userId: number, id: number) => {
   }
 };
 
-export const updateJobs = async (userId: number, jobId: number, jobOrOrder?: JobWithProgress | number) => {
+export const updateJobs = async (
+  userId: number,
+  jobId: number,
+  jobOrOrder?: JobWithProgress | number
+) => {
   let body;
-  if (typeof jobOrOrder === 'number') {
-    body = { userId, id: jobId, jobOrOrder }
+  if (typeof jobOrOrder === "number") {
+    body = { userId, id: jobId, jobOrOrder };
   } else {
-    body = { userId, id: jobId, jobOrOrder }
+    body = { userId, id: jobId, jobOrOrder };
   }
   try {
     const res = await fetch("/api/jobs/update", {

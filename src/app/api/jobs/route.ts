@@ -17,6 +17,5 @@ export const POST = async (req: NextRequest) => {
     orderBy: { order: "asc" },
   });
 
-
   return NextResponse.json(jobs);
 };

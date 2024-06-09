@@ -3,7 +3,13 @@
 import { useState, useEffect } from "react";
 import JobCard from "./JobCard";
 import JobForm from "./JobForm";
-import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DraggableProvided,
+  DraggableStateSnapshot,
+} from "@hello-pangea/dnd";
 import { JobWithProgress } from "@/types/JobWithProgress";
 import { createJobs, deleteJobs, getAllJobs, updateJobs } from "@/libs/jobs";
 import { useSession } from "next-auth/react";
@@ -22,7 +28,7 @@ const JobList = () => {
       setUserId(parseInt(session.userData.id as string));
     }
 
-    if(userId) {
+    if (userId) {
       const fetchJobs = async () => {
         const data = await getAllJobs(userId);
         setJobs(data);
@@ -33,20 +39,22 @@ const JobList = () => {
   }, [session, userId]);
 
   const handleSaveJob = async (job: any) => {
-    if(!session) return null;
+    if (!session) return null;
     const userId = parseInt(session.userData.id as string);
     const res = job.id
       ? await updateJobs(userId, job.id, job)
       : await createJobs(userId, job, jobs.length);
-      // await prisma.job.create({
-      //     data: { ...job, order: jobs.length },
-      //   });
+    // await prisma.job.create({
+    //     data: { ...job, order: jobs.length },
+    //   });
     const savedJob = res.data;
 
-    setJobs(prevJobs => {
-      const jobExists = prevJobs.find(j => j.id === savedJob.id);
+    setJobs((prevJobs) => {
+      const jobExists = prevJobs.find((j) => j.id === savedJob.id);
       if (jobExists) {
-        return prevJobs.map(j => (j.id === savedJob.id ? { ...j, ...savedJob } : j));
+        return prevJobs.map((j) =>
+          j.id === savedJob.id ? { ...j, ...savedJob } : j
+        );
       } else {
         return [...prevJobs, { ...savedJob, progress: [] }];
       }
@@ -60,26 +68,35 @@ const JobList = () => {
   };
 
   const handleDeleteJob = async (id: number) => {
-    if(!userId) return null;
+    if (!userId) return null;
     const res = await deleteJobs(userId, id);
     res && setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
   };
 
-  const handleDropProgress = async (event: React.DragEvent<HTMLDivElement>, jobId: number) => {
+  const handleDropProgress = async (
+    event: React.DragEvent<HTMLDivElement>,
+    jobId: number
+  ) => {
     if (!userId) return;
-    const stageName = event.dataTransfer.getData('stage');
+    const stageName = event.dataTransfer.getData("stage");
     const stageResponse = await getStageByName(userId, stageName);
-    console.log('stageResponse', stageResponse)
+    console.log("stageResponse", stageResponse);
 
     if (stageResponse.success && stageResponse.data) {
       const stage: Stage = stageResponse.data;
 
       await assignJobProgress(userId, jobId, stage.id);
 
-      setJobs(prevJobs =>
-        prevJobs.map(job =>
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
           job.id === jobId
-            ? { ...job, progress: [...job.progress, { stage, jobId, stageId: stage.id, id: 0, userId }] }
+            ? {
+                ...job,
+                progress: [
+                  ...job.progress,
+                  { stage, jobId, stageId: stage.id, id: 0, userId },
+                ],
+              }
             : job
         )
       );
@@ -87,7 +104,7 @@ const JobList = () => {
       console.error(stageResponse.message || "Failed to assign stage");
     }
   };
-  
+
   const handleDragEnd = async (result: any) => {
     if (!result.destination) return;
 
@@ -98,7 +115,7 @@ const JobList = () => {
     setJobs(reorderedJobs);
 
     for (let i = 0; i < reorderedJobs.length; i++) {
-      updateJobs(userId as number, reorderedJobs[i].id, i)
+      updateJobs(userId as number, reorderedJobs[i].id, i);
     }
   };
 
@@ -132,7 +149,10 @@ const JobList = () => {
                   draggableId={job.id.toString()}
                   index={index}
                 >
-                  {(provided: DraggableProvided, draggableSnapshot: DraggableStateSnapshot) => (
+                  {(
+                    provided: DraggableProvided,
+                    draggableSnapshot: DraggableStateSnapshot
+                  ) => (
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}

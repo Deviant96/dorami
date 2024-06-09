@@ -1,4 +1,4 @@
-import { Job, JobProgress, Stage } from '@prisma/client';
+import { Job, JobProgress, Stage } from "@prisma/client";
 
 export interface JobWithProgress extends Job {
   progress: (JobProgress & {

@@ -29,14 +29,13 @@ export const {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        if(!credentials.username || !credentials.password) {
-          throw new Error('Please enter username and password')
+        if (!credentials.username || !credentials.password) {
+          throw new Error("Please enter username and password");
         }
 
         const user = await getUser(credentials.username as string);
-        if(!user) {
-          throw new Error( JSON.stringify({ errors: "errors", status: false }))
-          // return null;
+        if (!user) {
+          throw new Error(JSON.stringify({ errors: "errors", status: false }));
         }
         // const passwordMatch = await compare(credentials.password as string, user?.password! as string)
 
@@ -46,9 +45,9 @@ export const {
         //     username: credentials.username as string
         //   }
         // })
-        
+
         return user as any;
       },
     }),
-  ]
+  ],
 });

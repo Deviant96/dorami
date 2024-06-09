@@ -33,7 +33,7 @@ export const authConfig = {
         token.provider = account.provider;
         token.accessToken = account.access_token;
         token.user = user;
-        token.username = user.username
+        token.username = user.username;
       }
       return token;
     },
@@ -43,11 +43,11 @@ export const authConfig = {
         id: token.sub,
         email: token.email,
         username: token.username,
-      }
+      };
       return session;
     },
     async signIn({ user, account, profile, email, credentials }) {
-        return true;
+      return true;
     },
   },
   secret: process.env.AUTH_SECRET,

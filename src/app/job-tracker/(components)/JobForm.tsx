@@ -1,8 +1,8 @@
 "use client";
 
-import { JobWithProgress } from '@/types/JobWithProgress';
-import fillDateForm from '@/utils/fillDateForm';
-import { useState } from 'react';
+import { JobWithProgress } from "@/types/JobWithProgress";
+import fillDateForm from "@/utils/fillDateForm";
+import { useState } from "react";
 
 interface JobFormProps {
   job: JobWithProgress;
@@ -11,14 +11,23 @@ interface JobFormProps {
   isUpdatingJob?: boolean;
 }
 
-const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob }) => {
+const JobForm: React.FC<JobFormProps> = ({
+  job,
+  onSave,
+  onCancel,
+  isUpdatingJob,
+}) => {
   const [formData, setFormData] = useState(job);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type, checked } = (e.target as HTMLInputElement);
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
+    const { name, value, type, checked } = e.target as HTMLInputElement;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -27,7 +36,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob 
 
     const jobData: any = { ...formData };
     const date = jobData.date ? jobData.date : fillDateForm(jobData.date);
-    jobData.date = (new Date(date)).toISOString()
+    jobData.date = new Date(date).toISOString();
     jobData.isForeign = jobData.isForeign ? jobData.isForeign : false;
     jobData.details = jobData.details ? jobData.details : "";
     jobData.status = jobData.status ? jobData.status : "on-going";
@@ -36,7 +45,10 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded shadow-md bg-white mb-4">
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 border rounded shadow-md bg-white mb-4"
+    >
       <div className="mb-4">
         <label className="block text-gray-700">Company Name</label>
         <input
@@ -71,7 +83,11 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob 
         <input
           type="date"
           name="date"
-          value={isUpdatingJob ? new Date(formData.date).toISOString().split('T')[0] : ''}
+          value={
+            isUpdatingJob
+              ? new Date(formData.date).toISOString().split("T")[0]
+              : ""
+          }
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />
@@ -80,7 +96,7 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob 
         <label className="block text-gray-700">Notes</label>
         <textarea
           name="notes"
-          value={formData.notes || ''}
+          value={formData.notes || ""}
           onChange={handleChange}
           className="mt-1 p-2 border rounded w-full"
         />
@@ -101,8 +117,12 @@ const JobForm: React.FC<JobFormProps> = ({ job, onSave, onCancel, isUpdatingJob 
         </select>
       </div>
       <div className="flex justify-end space-x-2">
-        <button type="button" onClick={onCancel} className="text-gray-500">Cancel</button>
-        <button type="submit" className="text-blue-500">Save</button>
+        <button type="button" onClick={onCancel} className="text-gray-500">
+          Cancel
+        </button>
+        <button type="submit" className="text-blue-500">
+          Save
+        </button>
       </div>
     </form>
   );

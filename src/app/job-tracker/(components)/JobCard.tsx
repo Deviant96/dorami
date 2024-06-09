@@ -10,19 +10,34 @@ interface JobCardProps {
   onDrag: boolean;
 }
 
-const JobStatusStyled  = (jobStatus: string) : string => {
+const JobStatusStyled = (jobStatus: string): string => {
   let jobStyled;
-  switch(jobStatus) {
-    case "pass": jobStyled = "text-[#2a9d8f]"; break;
-    case "on-going": jobStyled = "text-[#00b4d8]"; break;
-    case "do not pass": jobStyled = "text-red-500"; break;
-    case "gone": jobStyled = "text-yellow-500"; break;
-    default: jobStyled = "text-gray-500";
+  switch (jobStatus) {
+    case "pass":
+      jobStyled = "text-[#2a9d8f]";
+      break;
+    case "on-going":
+      jobStyled = "text-[#00b4d8]";
+      break;
+    case "do not pass":
+      jobStyled = "text-red-500";
+      break;
+    case "gone":
+      jobStyled = "text-yellow-500";
+      break;
+    default:
+      jobStyled = "text-gray-500";
   }
   return jobStyled;
-}
+};
 
-const JobCard: React.FC<JobCardProps> = ({ job, onEdit, onDelete, onDrop, onDrag }) => {
+const JobCard: React.FC<JobCardProps> = ({
+  job,
+  onEdit,
+  onDelete,
+  onDrop,
+  onDrag,
+}) => {
   return (
     <div
       className={`p-4 rounded shadow-md bg-white mb-4 relative ${onDrag ? "border-2 border-blue-500" : ""}`}
@@ -33,18 +48,22 @@ const JobCard: React.FC<JobCardProps> = ({ job, onEdit, onDelete, onDrop, onDrag
         <h3 className="text-xl font-bold">
           {job.companyName}{" "}
           {job.isForeign && (
-            <BiWorld className="inline text-sm text-[#219ebc]" title="Foreign" aria-label="Foreign" />
+            <BiWorld
+              className="inline text-sm text-[#219ebc]"
+              title="Foreign"
+              aria-label="Foreign"
+            />
           )}
         </h3>
-        <span
-        className={`text-sm ${JobStatusStyled(job.status)}`}
-        >
+        <span className={`text-sm ${JobStatusStyled(job.status)}`}>
           {`(${job.status})`}
         </span>
         {job.date ? "•" : ""}
-        <span className="text-xs text-gray-500">{new Date(job.date).toLocaleDateString()}</span>
+        <span className="text-xs text-gray-500">
+          {new Date(job.date).toLocaleDateString()}
+        </span>
       </div>
-      
+
       <p className="text-sm text-gray-600">{job.details}</p>
       <p className="text-xs text-gray-600 mt-3"></p>
       <p className="text-xs text-gray-600 italic mt-3">{job.notes}</p>
@@ -66,7 +85,9 @@ const JobCard: React.FC<JobCardProps> = ({ job, onEdit, onDelete, onDrop, onDrag
         <ul className="list-none">
           {job.progress.map((progress, index) => (
             <li key={index} className="text-sm text-gray-600 inline">
-              <span className="text-xs border rounded-xl py-1 px-2">{progress.stage.name}</span>
+              <span className="text-xs border rounded-xl py-1 px-2">
+                {progress.stage.name}
+              </span>
               <span> {job.progress.length === index + 1 ? "" : "->"} </span>
             </li>
           ))}

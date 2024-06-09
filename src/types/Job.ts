@@ -5,7 +5,7 @@ export interface Job {
   details: string;
   date: string;
   notes: string;
-  status: 'pass' | 'do not pass' | 'gone' | 'cancel';
+  status: "pass" | "do not pass" | "gone" | "cancel";
   // progress: { stage: { name: string } }[];
   order: number;
 }

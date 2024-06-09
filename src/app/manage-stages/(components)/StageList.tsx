@@ -3,7 +3,12 @@
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { createState, deleteState, getAllStages, updateState } from "@/libs/stages";
+import {
+  createState,
+  deleteState,
+  getAllStages,
+  updateState,
+} from "@/libs/stages";
 import { useSession } from "next-auth/react";
 import { Stage } from "@/types/Stage";
 
@@ -22,29 +27,33 @@ const StageList: React.FC = () => {
     const fetchStages = async () => {
       if (!userId) return;
       const stageResponse = await getAllStages(userId);
-      console.log('stageResponse', stageResponse)
+      console.log("stageResponse", stageResponse);
 
       if (stageResponse.success && stageResponse.data) {
-        console.log('stageResponse', stageResponse)
+        console.log("stageResponse", stageResponse);
         const stage: Stage[] = stageResponse.data;
         setStages(stage);
       } else {
         console.error(stageResponse.message || "Failed to fetch stages");
       }
-    }
+    };
     fetchStages();
   }, [session, userId]);
 
   const handleAddStage = async () => {
     if (!userId) return;
     if (newStageName.trim()) {
-      const highestOrder = Math.max(...stages.map(order => order.order)) + 1;
-      console.log('highestOrder', highestOrder)
-      const stageResponse = await createState(userId, newStageName, highestOrder);
+      const highestOrder = Math.max(...stages.map((order) => order.order)) + 1;
+      console.log("highestOrder", highestOrder);
+      const stageResponse = await createState(
+        userId,
+        newStageName,
+        highestOrder
+      );
       if (stageResponse.success && stageResponse.data) {
         const stage: Stage = stageResponse.data;
         setStages([...stages, stage]);
-        setNewStageName('');
+        setNewStageName("");
       } else {
         console.error(stageResponse.message || "Failed to create stage");
       }
@@ -64,10 +73,14 @@ const StageList: React.FC = () => {
       const updatedStageResponse = await updateState(userId, id, name);
       if (updatedStageResponse.success && updatedStageResponse.data) {
         const updatedStage: Stage = updatedStageResponse.data;
-        setStages(stages.map(stage => (stage.id === updatedStage.id ? updatedStage : stage)));
+        setStages(
+          stages.map((stage) =>
+            stage.id === updatedStage.id ? updatedStage : stage
+          )
+        );
         setEditingStage(null);
       } else {
-        console.error(updatedStageResponse.message || "Failed to update stage")
+        console.error(updatedStageResponse.message || "Failed to update stage");
       }
     }
   };
@@ -75,12 +88,11 @@ const StageList: React.FC = () => {
   const handleDeleteStage = async (id: number) => {
     if (!userId) return;
     const stageResponse = await deleteState(userId, id);
-    if(stageResponse.success) {
-      setStages(stages.filter(stage => stage.id !== id));
+    if (stageResponse.success) {
+      setStages(stages.filter((stage) => stage.id !== id));
     } else {
       console.error(stageResponse.message || "Failed to delete stage");
     }
-
   };
 
   const handleDragEnd = async (result: any) => {
@@ -93,7 +105,7 @@ const StageList: React.FC = () => {
     setStages(reorderedStages);
 
     for (let i = 0; i < reorderedStages.length; i++) {
-      await updateState(userId as number, reorderedStages[i].id, i)
+      await updateState(userId as number, reorderedStages[i].id, i);
     }
   };
 

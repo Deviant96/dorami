@@ -5,7 +5,10 @@ export const POST = async (req: NextRequest) => {
   const { userId, jobId, stageId } = await req.json();
 
   if (!userId) {
-    return NextResponse.json({ message: "User ID details required" }, { status: 500 });
+    return NextResponse.json(
+      { message: "User ID details required" },
+      { status: 500 }
+    );
   }
 
   const data = await prisma.jobProgress.create({
@@ -15,6 +18,6 @@ export const POST = async (req: NextRequest) => {
       userId,
     },
   });
-  
+
   return NextResponse.json({ data }, { status: 200 });
 };
