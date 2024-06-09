@@ -5,12 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { createState, deleteState, getAllStages, updateState } from "@/libs/stages";
 import { useSession } from "next-auth/react";
-
-interface Stage {
-  id: number;
-  order: number;
-  name: string;
-}
+import { Stage } from "@/types/Stage";
 
 const StageList: React.FC = () => {
   const [stages, setStages] = useState<Stage[]>([]);

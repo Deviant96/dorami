@@ -1,4 +1,4 @@
-import StageList from "@/components/StageList";
+import StageList from "./(components)/StageList";
 
 export default function Stages() {
   return (
