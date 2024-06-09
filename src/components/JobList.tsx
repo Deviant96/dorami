@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import JobCard from "./JobCard";
 import JobForm from "./JobForm";
 import { DragDropContext, Droppable, Draggable, DraggableProvided, DraggableStateSnapshot } from "@hello-pangea/dnd";
-import prisma from "@/db/prisma";
 import { JobWithProgress } from "@/types/JobWithProgress";
 import { createJobs, deleteJobs, getAllJobs, updateJobs } from "@/libs/jobs";
 import { useSession } from "next-auth/react";
@@ -70,6 +69,7 @@ const JobList = () => {
     if (!userId) return;
     const stageName = event.dataTransfer.getData('stage');
     const stageResponse = await getStageByName(userId, stageName);
+    console.log('stageResponse', stageResponse)
 
     if (stageResponse.success && stageResponse.data) {
       const stage: Stage = stageResponse.data;
@@ -83,6 +83,8 @@ const JobList = () => {
             : job
         )
       );
+    } else {
+      console.error(stageResponse.message || "Failed to assign stage");
     }
   };
   

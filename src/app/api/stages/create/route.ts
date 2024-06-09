@@ -1,18 +1,25 @@
 import prisma from "@/db/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { API_RESPONSE_MESSAGES } from "../../(lib)/consts";
+import { auth } from "@/app/auth";
 
 export const POST = async (req: NextRequest) => {
-  const { userId, name } = await req.json();
+  const session = await auth();
+  if (!session)
+    return Response.json({ message: API_RESPONSE_MESSAGES.ERROR.UNAUTHORIZED }, { status: 500 });
+
+  const { userId, name, order } = await req.json();
 
   if (!userId) {
-    return NextResponse.json({ message: "User ID cannot be empty" }, { status: 500 });
+    return Response.json({ message: API_RESPONSE_MESSAGES.ERROR.BAD_REQUEST }, { status: 500 });
   }
 
   if (!name) {
-    return NextResponse.json({ message: "Name cannot be empty" }, { status: 500 });
-  }
+    return Response.json({ message: API_RESPONSE_MESSAGES.ERROR.BAD_REQUEST }, { status: 500 });
+  } 
   const data = await prisma.stage.create({
-    data: { name, userId }
+    data: { name, userId, order }
   });
-  return NextResponse.json(data, { status: 200 });
+
+  return Response.json({ success: true, data }, { status: 200 });
 };

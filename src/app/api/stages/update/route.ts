@@ -1,28 +1,34 @@
 import prisma from "@/db/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { API_RESPONSE_MESSAGES } from "../../(lib)/consts";
+import { auth } from "@/app/auth";
 
 export const PUT = async (req: NextRequest) => {
+  const session = await auth();
+  if (!session)
+    return Response.json({ message: API_RESPONSE_MESSAGES.ERROR.UNAUTHORIZED }, { status: 500 });
+
   const { userId, id, name, order } = await req.json();
-  let updatedStage;
+  let data;
 
   if (!id) {
-    return NextResponse.json({ message: "ID cannot be empty" }, { status: 500 });
+    return Response.json({ message: API_RESPONSE_MESSAGES.ERROR.BAD_REQUEST }, { status: 500 });
   }
 
   if (order !== undefined) {
-    updatedStage = await prisma.stage.update({
+    data = await prisma.stage.update({
       where: { id, userId },
       data: { order }
     });
   } else {
     if (!name)
-      return NextResponse.json({ message: "Name cannot be empty" }, { status: 500 });
+      return Response.json({ message: API_RESPONSE_MESSAGES.ERROR.BAD_REQUEST }, { status: 500 });
 
-    updatedStage = await prisma.stage.update({
+    data = await prisma.stage.update({
       where: { id, userId },
       data: { name }
     });
   }
 
-  return NextResponse.json(updatedStage, { status: 200 });
+  return Response.json({ success: true, data }, { status: 200 });
 };
