@@ -14,9 +14,9 @@ export const authConfig = {
     authorized({ request: { nextUrl }, auth }) {
       let isLoggedIn = !!auth?.user;
       let isOnJobTracker = nextUrl.pathname.startsWith("/job-tracker");
-      let isOnManageStates = nextUrl.pathname.startsWith("/manage-states");
+      let isOnManageStages = nextUrl.pathname.startsWith("/manage-stages");
 
-      if (isOnJobTracker || isOnManageStates) {
+      if (isOnJobTracker || isOnManageStages) {
         if (isLoggedIn) return true;
         return false;
       }
